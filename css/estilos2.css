@@ -1,0 +1,22 @@
+*{
+    padding: 50;
+    margin: 50;
+    box-sizing: border-box;
+}
+body{
+    background-color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+h1{
+    text-align: center;
+    color: yellow;
+}
+form{
+    width: 100px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: yellowgreen;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+

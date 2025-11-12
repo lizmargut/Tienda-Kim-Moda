@@ -1,0 +1,98 @@
+/* selector universal: para que todos los navegadores se vena igual */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /*para que no me afecte la caja*/
+}
+
+body {
+    /*afecta a todo la pgina*/
+    background-color: rgb(102, 62, 250);
+}
+
+section#contenedor {
+    margin: 10px auto;
+    background-color: beige;
+    width: 1200px;
+}
+
+header {
+    background: linear-gradient(to right, #faf1a0, #fab9f6, #fb8cd0);
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100px;
+}
+
+header h1 {
+    float: left;
+    margin: 20px;
+
+
+}
+
+header h3 {
+    font-size: 22px;
+    margin: 20px;
+    float: right;
+    font-style: Open Sans;
+}
+
+header h5 {
+    padding: 30px;
+    margin: 30px;
+    
+
+}
+nav a:hover {
+    background-color: rgb(239, 75, 176);
+    color: rgb(14, 14, 14);
+    height: 50px;
+}
+
+nav {
+    background: linear-gradient(to right, #faf1a0, #fab9f6, #fb8cd0);
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    height: 60px;
+    text-align: center;
+}
+
+nav a {
+    padding: 20px;
+    text-decoration: none;/*quita la linea que aparece debajo de los enlaces*/
+    color: #333;
+    font-weight: bold;
+    display: flex;/*para que los enlaces aparezcan uno al lado del otro*/
+    align-items: center;
+    gap: 8px;
+}
+i {
+    font-size: 1.2em; /* tamaño de los íconos */
+}
+
+
+section#cuerpo {
+    background: linear-gradient(to right, #faf1a0, #fab9f6, #fb8cd0);
+    font-family: Arial, Helvetica, sans-serif;
+    height: 60px;
+    text-align: center;
+}
+
+footer {
+    background-color: #333;
+    margin: 5px;
+    height: 50px;
+    text-align: center;
+}
+
+footer p {
+    color: rgb(0, 0, 0);
+    text-align: right;
+    padding: 10px;
+    font-weight: bold;
+}
+
+/*crear una base de datos de nombre supermecado que tenga los campos usuario,contraseña,nombre, apellido, direccion, telefono, email, fecha de nacimiento, genero, estado civil, ocupacion, salario, fecha de registro, fecha de actualizacion, estado*/
