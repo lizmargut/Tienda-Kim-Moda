@@ -42,7 +42,7 @@ if (isset($_POST['guardar'])) {
                WHERE prod_id = $id";
 
     if ($conexion->query($update)) {
-        echo "<script>alert('Producto actualizado correctamente'); window.location='productosAdministrar.php?id=$id';</script>";
+        echo "<script>alert('Producto actualizado correctamente'); window.location='productosAdministrar.php';</script>";
     } else {
         echo "<script>alert('Error al actualizar');</script>";
     }
@@ -55,46 +55,8 @@ if (isset($_POST['guardar'])) {
 <meta charset="UTF-8">
 <title>Editar Producto</title>
 
-<style>
-    body {
-        background: #f2f2f2;
-        font-family: Arial;
-    }
-
-    .contenedor {
-        width: 60%;
-        margin: 30px auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    input, select {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-    }
-
-    label { font-weight: bold; }
-
-    .btnGuardar {
-        margin-top: 20px;
-        padding: 10px;
-        width: 100%;
-        background: #2980b9;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-    .btnGuardar:hover {
-        background: #1f6391;
-    }
-</style>
+<!-- Estilos externos -->
+<link rel="stylesheet" href="css/editarProducto.css">
 
 </head>
 <body>
@@ -142,7 +104,7 @@ if (isset($_POST['guardar'])) {
             <?php } ?>
         </select>
 
-        <!-- BOTÓN CORRECTO -->
+        <!-- BOTÓN GUARDAR -->
         <button type="submit" class="btnGuardar" name="guardar">Guardar Cambios</button>
 
     </form>

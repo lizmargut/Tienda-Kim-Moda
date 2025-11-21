@@ -42,51 +42,10 @@ if (isset($_POST['guardar'])) {
 <head>
 <meta charset="UTF-8">
 <title>Agregar Producto</title>
-
-<style>
-    body {
-        background: #f2f2f2;
-        font-family: Arial;
-    }
-
-    .contenedor {
-        width: 60%;
-        margin: 30px auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    input, select {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-    }
-
-    label { font-weight: bold; }
-
-    .btnGuardar {
-        margin-top: 20px;
-        padding: 10px;
-        width: 100%;
-        background: #27ae60;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-        font-weight: bold;
-    }
-
-    .btnGuardar:hover {
-        background: #1e8449;
-    }
-</style>
-
+<link rel="stylesheet" href="css/estilos4.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body>
 
 <div class="contenedor">

@@ -1,0 +1,117 @@
+/* Fondo general */
+body {
+    background: #fff0f7; /* rosado muy claro profesional */
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal */
+.contenedor {
+    width: 80%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: #ffd4eb; /* rosa suave */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(214, 58, 143, 0.15);
+}
+
+/* Imagen del producto */
+.contenedor img {
+    width: 320px;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: auto;
+    border: 3px solid #f2a3d5; /* borde rosado elegante */
+}
+
+/* Título del producto */
+h2 {
+    text-align: center;
+    margin-top: 20px;
+    color: #d63a8f; /* rosa fuerte profesional */
+    font-size: 28px;
+}
+
+/* Información del producto */
+.info {
+    font-size: 18px;
+    margin-top: 20px;
+    line-height: 1.8;
+    color: #444;
+}
+
+/* Contenedor botones */
+.botones {
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* Botones generales */
+.btn {
+    padding: 12px 22px;
+    margin: 10px;
+    text-decoration: none;
+    color: white;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+/* Botón editar */
+.editar {
+    background: #f2a3d5; /* rosa elegante medio */
+}
+.editar:hover {
+    background: #d63a8f; /* rosa fuerte */
+}
+
+/* Botón eliminar */
+.eliminar {
+    background: #ff6b8a; /* rosa rojizo moderno */
+}
+.eliminar:hover {
+    background: #d9445c;
+}
+
+/* Botón volver */
+.volver {
+    background: #e8b6d9; /* rosa pastel suave */
+}
+.volver:hover {
+    background: #d39ac4;
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 600px) {
+
+    .contenedor {
+        width: 92%;
+        padding: 15px;
+    }
+
+    .contenedor img {
+        width: 100%;
+        height: auto;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .info {
+        font-size: 16px;
+    }
+
+    .btn {
+        width: 90%;
+        padding: 12px;
+        display: block;
+        margin: 10px auto;
+    }
+}

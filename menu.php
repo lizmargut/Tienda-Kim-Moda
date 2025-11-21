@@ -11,8 +11,8 @@
 <body>
     <nav>
         <!-- Menú visible para todos -->
-        <a href="index.php"><i class="bi bi-cash-coin"></i> Ventas</a>
-        <a href="productos.php"><i class="bi bi-person-fill"></i> Clientes</a>
+        <a href="ventas.php"><i class="bi bi-cash-coin"></i> Ventas</a>
+        <a href="clientes.php"><i class="bi bi-person-fill"></i> Clientes</a>
 
         <?php 
         if ($rol == "administrador") {
@@ -23,9 +23,10 @@
         }
         ?>
 
-        <a href="#"><i class="bi bi-truck"></i> Proveedores</a>
-        <a href="login.php"><i class="bi bi-file-earmark-text"></i> Reportes</a>
-        <a href="#"><i class="bi bi-bell-fill"></i> Notificaciones</a>
+        <a href="proveedores.php"><i class="bi bi-truck"></i> Proveedores</a>
+        <a href="reportes.php"><i class="bi bi-file-earmark-text"></i> Reportes</a>
+        <a href="notificacion.php"><i class="bi bi-bell-fill"></i> Notificaciones</a>
+        
     </nav>
 </body>
 </html>

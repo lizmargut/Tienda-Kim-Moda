@@ -1,0 +1,82 @@
+body {
+    font-family: Arial;
+    background: #fde9f3;
+    padding: 20px;
+}
+.btnVolver {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #f7b9d5; /* Rosa claro */
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    transition: 0.3s ease;
+}
+
+.btnVolver:hover {
+    background: #e48eb8; /* Rosa más intenso */
+}
+
+
+.titulo {
+    text-align: center;
+    font-size: 30px;
+    color: #b02e6a;
+    margin-bottom: 30px;
+}
+
+.subtitulo {
+    margin-top: 30px;
+    color: #c94e8a;
+    font-size: 22px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 15px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+th {
+    background: #ffb6da;
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #f7b9d0;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid #ffc3e1;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    td {
+        text-align: left;
+        padding-left: 40%;
+        position: relative;
+    }
+
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        color: #b02e6a;
+    }
+}

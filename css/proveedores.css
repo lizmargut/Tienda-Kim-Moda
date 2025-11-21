@@ -1,0 +1,132 @@
+/* Color rosado claro con estilo moderno */
+body {
+    font-family: Arial;
+    background: #fde9f3; 
+    margin: 0;
+    padding: 20px;
+}
+
+.titulo {
+    text-align: center;
+    color: #b02e6a;
+    margin-bottom: 25px;
+}
+
+.form-container {
+    width: 90%;
+    max-width: 450px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #f7b9d0;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.form-container h3 {
+    text-align: center;
+    color: #b02e6a;
+}
+
+input, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 12px;
+    border-radius: 6px;
+    border: 1px solid #d27ca1;
+}
+
+button {
+    background: #ff77b7;
+    color: white;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #e45fa3;
+}
+
+table {
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    background: white;
+}
+
+th {
+    background: #ffb6da;
+    padding: 12px;
+}
+
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #f0aecf;
+}
+
+/* Botones editar y eliminar */
+.btnEditar, .btnEliminar {
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btnEditar {
+    background: #ff85c1;
+    color: white;
+}
+
+.btnEditar:hover {
+    background: #e368a2;
+}
+
+.btnEliminar {
+    background: #ff6185;
+    color: white;
+}
+
+.btnEliminar:hover {
+    background: #d94f6e;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 450px;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #f5a3c1;
+}
+
+.cerrar {
+    background: #999;
+    margin-top: 10px;
+}
+.btnVolver {
+    display: inline-block;
+    padding: 10px 15px;
+    background: #f7b9d5; /* Rosa claro */
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    transition: 0.3s ease;
+}
+
+.btnVolver:hover {
+    background: #e48eb8; /* Rosa más intenso */
+}
