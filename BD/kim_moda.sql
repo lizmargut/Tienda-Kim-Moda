@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `kim_moda` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `kim_moda`;
 -- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: kim_moda
@@ -56,7 +58,7 @@ CREATE TABLE `clientes` (
   `cli_email` varchar(50) NOT NULL,
   PRIMARY KEY (`cli_id`),
   UNIQUE KEY `idClientes_UNIQUE` (`cli_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +67,7 @@ CREATE TABLE `clientes` (
 
 LOCK TABLES `clientes` WRITE;
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (4,'Ana','López','11112222','Calle Falsa 123','ana@example.com'),(5,'Carlos','Martínez','33334444','Av. Siempre Viva 742','carlos@example.com');
+INSERT INTO `clientes` VALUES (4,'Samuel','López','2222','Calle Falsa 123','ana@example.com'),(5,'Carlos','Martínez','33334444','Av. Siempre Viva 742','carlos@example.com'),(6,'Normando','Bur','38958339u3','El potrero','normandoburgos20@gmail.com');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +96,7 @@ CREATE TABLE `detalledeventas` (
 
 LOCK TABLES `detalledeventas` WRITE;
 /*!40000 ALTER TABLE `detalledeventas` DISABLE KEYS */;
-INSERT INTO `detalledeventas` VALUES (1,1,2),(1,3,1),(2,4,3),(2,5,2);
+INSERT INTO `detalledeventas` VALUES (1,1,2),(1,3,1),(20,1,4),(20,2,1),(24,2,2),(24,3,1);
 /*!40000 ALTER TABLE `detalledeventas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -237,7 +239,7 @@ CREATE TABLE `imagenes` (
 
 LOCK TABLES `imagenes` WRITE;
 /*!40000 ALTER TABLE `imagenes` DISABLE KEYS */;
-INSERT INTO `imagenes` VALUES (1,'remera1.jpg'),(2,'pantalon1.jpg'),(3,'campera1.jpg');
+INSERT INTO `imagenes` VALUES (1,'remera.jpeg'),(2,'jeans.jpeg'),(3,'blusa.jpeg');
 /*!40000 ALTER TABLE `imagenes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +285,7 @@ CREATE TABLE `pedidos` (
   `pedido_id` int NOT NULL AUTO_INCREMENT,
   `cli_id` int NOT NULL,
   `emp_id` int NOT NULL,
-  `pedido_fecha` varchar(45) NOT NULL,
+  `pedido_fecha` date NOT NULL,
   `pedido_estado` varchar(45) NOT NULL,
   PRIMARY KEY (`pedido_id`,`cli_id`,`emp_id`),
   UNIQUE KEY `idPedidos_UNIQUE` (`pedido_id`),
@@ -291,7 +293,7 @@ CREATE TABLE `pedidos` (
   KEY `fk_pedidos_empleados1_idx` (`emp_id`),
   CONSTRAINT `fk_pedidos_clientes` FOREIGN KEY (`cli_id`) REFERENCES `clientes` (`cli_id`),
   CONSTRAINT `fk_pedidos_empleados1` FOREIGN KEY (`emp_id`) REFERENCES `empleados` (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,7 +302,7 @@ CREATE TABLE `pedidos` (
 
 LOCK TABLES `pedidos` WRITE;
 /*!40000 ALTER TABLE `pedidos` DISABLE KEYS */;
-INSERT INTO `pedidos` VALUES (1,4,10,'2025-06-01','Entregado'),(2,5,11,'2025-06-15','En preparación');
+INSERT INTO `pedidos` VALUES (1,4,10,'2025-06-01','Entregado'),(2,5,11,'2025-06-15','En preparación'),(20,4,11,'2025-11-20','Entregado'),(24,5,12,'2025-11-20','Entregado');
 /*!40000 ALTER TABLE `pedidos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,7 +329,7 @@ CREATE TABLE `productos` (
   KEY `fk_productos_imagenes1_idx` (`img_id`),
   CONSTRAINT `fk_productos_categorias1` FOREIGN KEY (`cat_id`) REFERENCES `categorias` (`cat_id`),
   CONSTRAINT `fk_productos_imagenes1` FOREIGN KEY (`img_id`) REFERENCES `imagenes` (`img_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -336,7 +338,7 @@ CREATE TABLE `productos` (
 
 LOCK TABLES `productos` WRITE;
 /*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` VALUES (1,1,'Camisa','Azul',10,'L','Manga larga',8500.00,1),(2,1,'Pantalón','Beige',8,'M','Casual',9200.00,1),(3,1,'Remera','Negro',15,'S','Dry-Fit',4800.00,1),(4,1,'Campera','Verde',6,'XL','Acolchada',14000.00,1),(5,1,'Short','Celeste',12,'M','Con bolsillos',4300.00,1),(6,2,'Blusa','Rosa',10,'M','Elegante',8700.00,2),(7,2,'Vestido','Rojo',5,'L','Corto',12000.00,2),(8,2,'Pantalón','Negro',9,'S','Ajustado',9600.00,2),(9,2,'Remera','Blanca',20,'M','Con diseño floral',5500.00,2),(10,2,'Campera','Azul',7,'L','Campera entallada',13500.00,2),(11,3,'Buzo','Gris',18,'L','Canguro',7800.00,3),(12,3,'Remera','Blanca',30,'M','De algodón',4200.00,3),(13,3,'Pantalón','Negro',16,'L','Jogger con puños',8900.00,3),(14,3,'Campera','Roja',9,'XL','Rompeviento',12500.00,3),(15,3,'Chaleco','Verde',5,'M','Sin mangas',9800.00,3),(16,3,'Gorro','Gris',25,'Único','Gorro tejido',2300.00,3),(17,3,'Camisa','Negro',10,'L','Lisa',7200.00,3),(18,3,'Remera','Multicolor',15,'M','Moderna',4900.00,3),(19,3,'Sudadera','Gris Oscuro',12,'L','Con capucha',8700.00,3),(20,3,'Campera','Azul Marino',8,'XL','Polar',14200.00,3);
+INSERT INTO `productos` VALUES (1,1,'Camisa','Rosa',3,'L','Manga larga',8500.00,3),(2,1,'Pantalón','Beige',1,'M','Casual',9200.00,2),(3,1,'Remera','Negro',14,'M','Dry-Fit',4800.00,3),(76,1,'Remera','Negro',15,'M','Dry-Fit',4800.00,1);
 /*!40000 ALTER TABLE `productos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -355,7 +357,7 @@ CREATE TABLE `proveedores` (
   `prov_direccion` varchar(100) NOT NULL,
   PRIMARY KEY (`prov_id`),
   UNIQUE KEY `idnew_table_UNIQUE` (`prov_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -364,7 +366,7 @@ CREATE TABLE `proveedores` (
 
 LOCK TABLES `proveedores` WRITE;
 /*!40000 ALTER TABLE `proveedores` DISABLE KEYS */;
-INSERT INTO `proveedores` VALUES (1,'María','Fernández','44445555','San Martín 500'),(2,'Pedro','Luna','55556666','Belgrano 999');
+INSERT INTO `proveedores` VALUES (1,'María','Fernández','44445555','San Martín 500'),(2,'Pedro','Luna','55556666','Belgrano 999'),(5,'Maribel','Sanchez','11112222','Payogasta');
 /*!40000 ALTER TABLE `proveedores` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -377,4 +379,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-09-18 13:58:56
+-- Dump completed on 2025-12-20 21:46:07
