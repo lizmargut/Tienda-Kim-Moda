@@ -17,7 +17,7 @@
 ?>
 <header>
     <h1>KIM MODA</h1>
-    <h3>Bienvenida Dueña</h3> 
+    <h3>Bienvenido Asministrador</h3> 
     
     <br/>
     <h5 style= "font-family: 22px; font-style: Open Sans; text-align: left;">Gestión de Productos</h5>    

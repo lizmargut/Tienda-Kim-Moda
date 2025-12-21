@@ -5,25 +5,67 @@ if (!isset($_GET['id'])) {
     die("Error: ID no enviado.");
 }
 
-$id = $_GET['id'];
+$prod_id = $_GET['id'];
 
-// Traer los datos actuales del producto
-$query = "SELECT * FROM productos WHERE prod_id = $id";
+/* ===============================
+   TRAER PRODUCTO
+================================ */
+$query = "SELECT * FROM productos WHERE prod_id = $prod_id";
 $res = $conexion->query($query);
 
-if ($res->num_rows == 0) {
+if (!$res || $res->num_rows == 0) {
     die("Producto no encontrado.");
 }
 
 $prod = $res->fetch_assoc();
 
-// Traer categorías
+/* ===============================
+   TRAER CATEGORÍAS
+================================ */
 $catQuery = $conexion->query("SELECT * FROM categorias");
 
-// Traer imágenes
-$imgQuery = $conexion->query("SELECT * FROM imagenes");
+/* ===============================
+   CONTAR IMÁGENES ACTUALES
+================================ */
+$resCount = $conexion->query("SELECT COUNT(*) AS total FROM imagenes WHERE prod_id = $prod_id");
+$totalImg = $resCount->fetch_assoc()['total'];
 
-// Si se envió el formulario
+/* ===============================
+   GUARDAR IMÁGENES (MÁX 3)
+================================ */
+if (isset($_POST['guardar']) && !empty($_FILES['imagenes']['name'][0])) {
+
+    $cantidad = count($_FILES['imagenes']['name']);
+
+    if ($cantidad + $totalImg > 3) {
+        die("Solo se permiten hasta 3 imágenes por producto");
+    }
+
+    for ($i = 0; $i < $cantidad; $i++) {
+
+        $tmp = $_FILES['imagenes']['tmp_name'][$i];
+        $nombreOriginal = $_FILES['imagenes']['name'][$i];
+        $tipo = $_FILES['imagenes']['type'][$i];
+
+        if ($tmp == "") continue;
+
+        $permitidos = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!in_array($tipo, $permitidos)) continue;
+
+        $nombreFinal = time() . "_" . basename($nombreOriginal);
+        $ruta = "img/" . $nombreFinal;
+
+        if (move_uploaded_file($tmp, $ruta)) {
+            $sqlImg = "INSERT INTO imagenes (img_ruta, prod_id)
+                       VALUES ('$nombreFinal', $prod_id)";
+            $conexion->query($sqlImg);
+        }
+    }
+}
+
+/* ===============================
+   ACTUALIZAR PRODUCTO
+================================ */
 if (isset($_POST['guardar'])) {
 
     $nombre = $_POST['prod_nombre'];
@@ -33,16 +75,20 @@ if (isset($_POST['guardar'])) {
     $desc = $_POST['prod_descripcion'];
     $precio = $_POST['prod_precio'];
     $categoria = $_POST['cat_id'];
-    $imagen = $_POST['img_id'];
 
     $update = "UPDATE productos 
-               SET prod_nombre='$nombre', prod_color='$color', prod_stock=$stock,
-                   prod_talle='$talle', prod_descripcion='$desc', prod_precio=$precio,
-                   cat_id=$categoria, img_id=$imagen
-               WHERE prod_id = $id";
+               SET prod_nombre='$nombre',
+                   prod_color='$color',
+                   prod_stock=$stock,
+                   prod_talle='$talle',
+                   prod_descripcion='$desc',
+                   prod_precio=$precio,
+                   cat_id=$categoria
+               WHERE prod_id = $prod_id";
 
     if ($conexion->query($update)) {
         echo "<script>alert('Producto actualizado correctamente'); window.location='productosAdministrar.php';</script>";
+        exit;
     } else {
         echo "<script>alert('Error al actualizar');</script>";
     }
@@ -64,7 +110,7 @@ if (isset($_POST['guardar'])) {
 <div class="contenedor">
     <h2>Editar Producto</h2>
 
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
 
         <label>Nombre</label>
         <input type="text" name="prod_nombre" value="<?= $prod['prod_nombre'] ?>" required>
@@ -93,15 +139,9 @@ if (isset($_POST['guardar'])) {
                 </option>
             <?php } ?>
         </select>
+        <label>Imágenes del producto (máx 3)</label>
+        <input type="file" name="imagenes[]" multiple accept="image/*">
 
-        <label>Imagen</label>
-        <select name="img_id" required>
-            <?php while ($i = $imgQuery->fetch_assoc()) { ?>
-                <option value="<?= $i['img_id'] ?>"
-                    <?= ($i['img_id'] == $prod['img_id']) ? 'selected' : '' ?>>
-                    <?= $i['img_url'] ?>
-                </option>
-            <?php } ?>
         </select>
 
         <!-- BOTÓN GUARDAR -->

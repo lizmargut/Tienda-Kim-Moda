@@ -2,67 +2,122 @@
 require_once "conexion.php";
 
 if (!isset($_GET['id'])) {
-    die("Error: ID de producto no especificado.");
+    die("ID de producto no especificado");
 }
 
-$id = $_GET['id'];
+$id = (int) $_GET['id'];
 
-// Consulta completa del producto
-$query = "SELECT p.*, c.cat_nombre, i.img_url
-          FROM productos p
-          INNER JOIN categorias c ON p.cat_id = c.cat_id
-          INNER JOIN imagenes i ON p.img_id = i.img_id
-          WHERE p.prod_id = $id";
+/* ===============================
+   TRAER PRODUCTO
+================================ */
+$sqlProd = "SELECT p.*, c.cat_nombre
+            FROM productos p
+            INNER JOIN categorias c ON p.cat_id = c.cat_id
+            WHERE p.prod_id = $id";
 
-$result = $conexion->query($query);
+$resProd = $conexion->query($sqlProd);
 
-if ($result->num_rows == 0) {
-    die("Producto no encontrado.");
+if (!$resProd || $resProd->num_rows === 0) {
+    die("Producto no encontrado");
 }
 
-$producto = $result->fetch_assoc();
+$producto = $resProd->fetch_assoc();
+
+/* ===============================
+   TRAER IMÁGENES (MÁX 3)
+================================ */
+$sqlImg = "SELECT img_ruta
+           FROM imagenes
+           WHERE prod_id = $id
+           LIMIT 3";
+
+$resImg = $conexion->query($sqlImg);
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <title>Detalle del Producto</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- CSS propio -->
 <link rel="stylesheet" href="css/detalle.css">
 </head>
 
 <body>
 
-<div class="contenedor">
-    
-    <img src="img/<?php echo $producto['img_url']; ?>" alt="Producto">
+<div class="contenedor container mt-4">
 
-    <h2><?php echo $producto['prod_nombre']; ?></h2>
+<!-- ===============================
+     CARRUSEL
+================================ -->
+<div id="carouselProducto" class="carousel slide mb-4" data-bs-ride="carousel">
 
-    <div class="info">
-        <strong>ID:</strong> <?php echo $producto['prod_id']; ?><br>
-        <strong>Categoría:</strong> <?php echo $producto['cat_nombre']; ?><br>
-        <strong>Color:</strong> <?php echo $producto['prod_color']; ?><br>
-        <strong>Talle:</strong> <?php echo $producto['prod_talle']; ?><br>
-        <strong>Stock:</strong> <?php echo $producto['prod_stock']; ?><br>
-        <strong>Descripción:</strong> <?php echo $producto['prod_descripcion']; ?><br>
-        <strong>Precio:</strong> $<?php echo $producto['prod_precio']; ?><br>
-        <strong>Imagen:</strong> <?php echo $producto['img_url']; ?>
+    <div class="carousel-inner">
+
+        <?php
+        if ($resImg->num_rows > 0) {
+            $active = "active";
+            while ($img = $resImg->fetch_assoc()) {
+        ?>
+                <div class="carousel-item <?= $active ?>">
+                    <img src="img/<?= $img['img_ruta'] ?>" class="d-block w-100" alt="Imagen producto">
+                </div>
+        <?php
+                $active = "";
+            }
+        } else {
+        ?>
+            <div class="carousel-item active">
+                <img src="img/sin-imagen.png" class="d-block w-100" alt="Sin imagen">
+            </div>
+        <?php } ?>
+
     </div>
 
-    <div class="botones">
-        <a class="btn editar" href="productoEditar.php?id=<?php echo $producto['prod_id']; ?>">Modificar</a>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProducto" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
 
-        <a class="btn eliminar" 
-           onclick="return confirm('¿Seguro que deseas eliminar este producto?')" 
-           href="productoEliminar.php?id=<?php echo $producto['prod_id']; ?>">
-           Eliminar
-        </a>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselProducto" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+</div>
 
-        <a class="btn volver" href="productosAdministrar.php">Volver</a>
-    </div>
+<!-- ===============================
+     INFO DEL PRODUCTO
+================================ -->
+<h2><?= $producto['prod_nombre'] ?></h2>
+
+<div class="info">
+    <strong>ID:</strong> <?= $producto['prod_id'] ?><br>
+    <strong>Categoría:</strong> <?= $producto['cat_nombre'] ?><br>
+    <strong>Color:</strong> <?= $producto['prod_color'] ?><br>
+    <strong>Talle:</strong> <?= $producto['prod_talle'] ?><br>
+    <strong>Stock:</strong> <?= $producto['prod_stock'] ?><br>
+    <strong>Descripción:</strong> <?= $producto['prod_descripcion'] ?><br>
+    <strong>Precio:</strong> $<?= $producto['prod_precio'] ?><br>
+</div>
+
+<!-- ===============================
+     BOTONES
+================================ -->
+<div class="mt-3">
+    <a class="btn btn-warning" href="productoEditar.php?id=<?= $producto['prod_id'] ?>">Modificar</a>
+    <a class="btn btn-danger"
+       onclick="return confirm('¿Seguro que deseas eliminar este producto?')"
+       href="productoEliminar.php?id=<?= $producto['prod_id'] ?>">
+       Eliminar
+    </a>
+    <a class="btn btn-secondary" href="productosAdministrar.php">Volver</a>
+</div>
 
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

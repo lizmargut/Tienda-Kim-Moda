@@ -1,15 +1,21 @@
-<?php require_once "conexion.php";  
+<?php
+require_once "conexion.php";
 
-$query = "SELECT p.prod_id, p.prod_nombre, p.prod_color, p.prod_stock,
-                 p.prod_talle, p.prod_descripcion, p.prod_precio,
-                 c.cat_nombre, i.img_url
-          FROM productos p
-          INNER JOIN categorias c ON p.cat_id = c.cat_id
-          INNER JOIN imagenes i ON p.img_id = i.img_id
-          LIMIT 100";
+$sql = "SELECT p.*, c.cat_nombre,
+               (SELECT img_ruta
+                FROM imagenes
+                WHERE prod_id = p.prod_id
+                LIMIT 1) AS imagen
+        FROM productos p
+        INNER JOIN categorias c ON p.cat_id = c.cat_id";
 
-$result = $conexion->query($query);
+$result = $conexion->query($sql);
+
+if (!$result) {
+    die("Error en consulta productos: " . $conexion->error);
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -21,33 +27,43 @@ $result = $conexion->query($query);
 
 <body>
 
-    <!-- BOTÓN AGREGAR PRODUCTO -->
-    <a href="agregarProducto.php" class="btnAgregar">+ Agregar Producto</a>
+<!-- BOTÓN AGREGAR PRODUCTO -->
+<a href="agregarProducto.php" class="btnAgregar">+ Agregar Producto</a>
 
-    <div class="contenedor">
+<div class="contenedor">
 
-        <?php while ($row = $result->fetch_assoc()) { ?>
-                        
-            <div class="card">
-                <img src="img/<?php echo $row['img_url']; ?>" alt="Producto">
+<?php while ($row = $result->fetch_assoc()) { ?>
+    <div class="card">
 
-                <h3><?php echo $row['prod_nombre']; ?></h3>
-
-                <p class="precio">$ <?php echo $row['prod_precio']; ?></p>
-
-                <p class="stock">
-                    Stock: <?php echo $row['prod_stock']; ?><br>
-                    Color: <?php echo $row['prod_color']; ?><br>
-                    Talle: <?php echo $row['prod_talle']; ?><br>
-                    Categoría: <?php echo $row['cat_nombre']; ?>
-                </p>
-
-                <a class="btn" href="cuerpoDetalle.php?id=<?php echo $row['prod_id']; ?>">Ver más</a>
-            </div>
-
-        <?php } ?>
-
+    <!-- CONTENEDOR IMAGEN -->
+    <div class="img-producto">
+        <img src="img/<?php echo $row['imagen'] ?: 'sin-imagen.png'; ?>" alt="Producto">
     </div>
+
+    <!-- CONTENIDO -->
+    <div class="card-body">
+        <h3><?php echo $row['prod_nombre']; ?></h3>
+
+        <p class="precio">$ <?php echo $row['prod_precio']; ?></p>
+
+        <p class="stock">
+            Stock: <?php echo $row['prod_stock']; ?><br>
+            Color: <?php echo $row['prod_color']; ?><br>
+            Talle: <?php echo $row['prod_talle']; ?><br>
+            Categoría: <?php echo $row['cat_nombre']; ?>
+        </p>
+
+        <a class="btn" href="cuerpoDetalle.php?id=<?php echo $row['prod_id']; ?>">
+            Ver más
+        </a>
+    </div>
+
+</div>
+
+<?php } ?>
+
+</div>
 
 </body>
 </html>
+

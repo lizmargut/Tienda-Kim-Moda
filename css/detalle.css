@@ -35,6 +35,18 @@ h2 {
     color: #d63a8f; /* rosa fuerte profesional */
     font-size: 28px;
 }
+.carousel img {
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.carousel-item {
+    display: none;
+}
+
+.carousel-item.active {
+    display: block;
+}
 
 /* Información del producto */
 .info {
