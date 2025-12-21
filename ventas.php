@@ -1,90 +1,16 @@
 <?php
-// ventas.php - POS con carrito + CRUD básico de pedidos
-session_start();
 require_once "conexion.php";
+require_once "carrito.php"; // Incluye el archivo carrito.php
+require_once "finalizarVenta.php"; // Incluye el archivo finalizarVenta.php
 
-// inicializar carrito
-if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
+// Obtener datos del carrito
+$carrito = obtenerDatosCarrito($conexion);
+$cart_items = $carrito['cart_items'];
+$total = $carrito['total'];
 
-// ---------------------- acciones CART ----------------------
-// agregar producto al carrito
-if (isset($_POST['add_to_cart'])) {
-    $prod_id = (int)$_POST['prod_id'];
-    $cantidad = max(1, (int)$_POST['cantidad']);
-    if (isset($_SESSION['cart'][$prod_id])) $_SESSION['cart'][$prod_id] += $cantidad;
-    else $_SESSION['cart'][$prod_id] = $cantidad;
-    header("Location: ventas.php");
-    exit;
-}
-
-// eliminar item del carrito
-if (isset($_GET['remove'])) {
-    $rid = (int)$_GET['remove'];
-    unset($_SESSION['cart'][$rid]);
-    header("Location: ventas.php");
-    exit;
-}
-
-// vaciar carrito
-if (isset($_GET['clear'])) {
-    unset($_SESSION['cart']);
-    $_SESSION['cart'] = [];
-    header("Location: ventas.php");
-    exit;
-}
-
-// finalizar venta: crea pedido + detalle + actualiza stock (transacción)
-if (isset($_POST['finalizar'])) {
-    $cli_id = (int)$_POST['cli_id'];               // 0 = consumidor final
-    $emp_id = (int)$_POST['emp_id'];               // requerir empleado
-    $estado = $conexion->real_escape_string($_POST['estado']);
-
-    if (empty($_SESSION['cart'])) {
-        echo "<script>alert('El carrito está vacío.'); window.location='ventas.php';</script>";
-        exit;
-    }
-
-    $cart = $_SESSION['cart'];
-    $ids = implode(',', array_map('intval', array_keys($cart)));
-
-    // obtener precios y stocks actuales
-    $res = $conexion->query("SELECT prod_id, prod_precio, prod_stock FROM productos WHERE prod_id IN ($ids)");
-    $prodInfo = [];
-    while ($r = $res->fetch_assoc()) $prodInfo[$r['prod_id']] = $r;
-
-    // begin transaction
-    $conexion->begin_transaction();
-    try {
-        $fecha = date('Y-m-d H:i:s');
-        $sql = "INSERT INTO pedidos (cli_id, emp_id, pedido_fecha, pedido_estado) VALUES ($cli_id, $emp_id, '$fecha', '$estado')";
-        if (!$conexion->query($sql)) throw new Exception($conexion->error);
-        $pedido_id = $conexion->insert_id;
-
-        foreach ($cart as $pid => $qty) {
-            $info = $prodInfo[$pid] ?? null;
-            if (!$info) throw new Exception("Producto ID $pid no encontrado.");
-            if ($info['prod_stock'] < $qty) throw new Exception("Stock insuficiente para {$info['prod_id']}.");
-
-            $ins = "INSERT INTO detalledeventas (pedido_id, prod_id, cantidad) VALUES ($pedido_id, $pid, $qty)";
-            if (!$conexion->query($ins)) throw new Exception($conexion->error);
-
-            $newStock = $info['prod_stock'] - $qty;
-            if (!$conexion->query("UPDATE productos SET prod_stock = $newStock WHERE prod_id = $pid")) throw new Exception($conexion->error);
-        }
-
-        $conexion->commit();
-        unset($_SESSION['cart']);
-        $_SESSION['cart'] = [];
-        echo "<script>alert('✔ Venta registrada correctamente (Pedido #$pedido_id)'); window.location='ventas.php';</script>";
-        exit;
-
-    } catch (Exception $e) {
-        $conexion->rollback();
-        $msg = addslashes($e->getMessage());
-        echo "<script>alert('❌ Error al finalizar venta: $msg'); window.location='ventas.php';</script>";
-        exit;
-    }
-}
+// Inicializar variables para el vuelto
+$vuelto = 0;
+$pago_con = 0;
 
 // ---------------------- CRUD PEDIDOS (editar estado / eliminar) ----------------------
 if (isset($_POST['editar_pedido'])) {
@@ -118,25 +44,9 @@ $sql = "SELECT p.prod_id, p.prod_nombre, p.prod_precio, p.prod_stock, i.img_url,
         LIMIT 50";
 $res = $conexion->query($sql);
 
-// datos del carrito para mostrar resumen
-$cart_items = [];
-if (!empty($_SESSION['cart'])) {
-    $ids = array_keys($_SESSION['cart']);
-    $ids_list = implode(',', array_map('intval', $ids));
-    $sql2 = "SELECT prod_id, prod_nombre, prod_precio, prod_stock FROM productos WHERE prod_id IN ($ids_list)";
-    $r2 = $conexion->query($sql2);
-    while ($row = $r2->fetch_assoc()) {
-        $id = $row['prod_id'];
-        $row['cantidad'] = $_SESSION['cart'][$id];
-        $row['subtotal'] = $row['cantidad'] * $row['prod_precio'];
-        $cart_items[$id] = $row;
-    }
-}
-$total = 0; foreach ($cart_items as $it) $total += $it['subtotal'];
-
 // listar pedidos (últimos 50)
 $pedidos = $conexion->query("
-    SELECT ped.pedido_id, ped.pedido_fecha, ped.pedido_estado,
+    SELECT ped.pedido_id, ped.pedido_fecha, ped.pedido_estado, ped.pedido_medio_pago,
            c.cli_nombre, c.cli_apellido,
            e.emp_nombre, e.emp_apellido
     FROM pedidos ped
@@ -145,6 +55,11 @@ $pedidos = $conexion->query("
     ORDER BY ped.pedido_id DESC
     LIMIT 50
 ");
+
+if (!$pedidos) {
+    echo "Error en la consulta: " . $conexion->error;
+    exit; // Detener la ejecución si hay un error
+}
 
 // listas para selects en finalizar
 $clientes = $conexion->query("SELECT * FROM clientes");
@@ -160,9 +75,6 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
 </head>
 <body>
     <a href="panel.php" class="btnVolver">⬅ Volver</a>
-
-
-
 
 <header class="topbar">
     <h1>Kim Moda — Ventas</h1>
@@ -219,7 +131,7 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
 
                 <details class="finalize">
                     <summary class="btn btn-primary">Finalizar venta</summary>
-                    <form method="POST" class="finalize-form">
+                    <form method="POST" class="finalize-form" action="finalizarVenta.php">
                         <label>Cliente (opcional)</label>
                         <select name="cli_id">
                             <option value="0">Consumidor final</option>
@@ -238,6 +150,25 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
                             <option value="Anulado">Anulado</option>
                         </select>
 
+                        <label>Medio de Pago</label>
+                        <select name="medio_pago" required id="medio_pago">
+                        <option value="" disabled selected>Seleccione una opción</option>
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <!-- Agrega más opciones si es necesario -->
+                        </select>
+
+                        <!-- Campo para el pago con (solo visible si es efectivo) -->
+                        <div id="pago_con_div" style="display: none;">
+                            <label>Paga con:</label>
+                            <input type="number" name="pago_con" id="pago_con" step="0.01" min="<?php echo $total; ?>">
+                        </div>
+
+                        <!-- Mostrar el vuelto -->
+                        <?php if ($vuelto > 0): ?>
+                            <p>Vuelto: $<?php echo number_format($vuelto, 2, ',', '.'); ?></p>
+                        <?php endif; ?>
+
                         <button type="submit" name="finalizar" class="btn btn-success">Confirmar y Guardar</button>
                     </form>
                 </details>
@@ -250,21 +181,27 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
 <section class="pedidos-section">
     <h2>Pedidos (últimos)</h2>
     <table class="pedidos-table">
-        <thead><tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <thead><tr><th>ID</th><th>Fecha</th><th>Cliente</th><th>Vendedor</th><th>Estado</th><th>Medio de Pago</th><th>Acciones</th></tr></thead>
         <tbody>
-            <?php while ($r = $pedidos->fetch_assoc()) { ?>
+            <?php
+            while ($r = $pedidos->fetch_assoc()) {
+            ?>
             <tr>
                 <td><?php echo $r['pedido_id']; ?></td>
                 <td><?php echo $r['pedido_fecha']; ?></td>
                 <td><?php echo $r['cli_nombre'] ? $r['cli_nombre'].' '.$r['cli_apellido'] : 'Consumidor final'; ?></td>
                 <td><?php echo $r['emp_nombre'].' '.$r['emp_apellido']; ?></td>
                 <td><?php echo $r['pedido_estado']; ?></td>
+                <td><?php echo $r['pedido_medio_pago']; ?></td>
                 <td>
                     <button class="btn btn-outline" onclick="openEdit(<?php echo $r['pedido_id'];?>,'<?php echo $r['pedido_estado'];?>')">Editar</button>
                     <a class="btn btn-danger" href="ventas.php?delete_pedido=<?php echo $r['pedido_id'];?>" onclick="return confirm('Eliminar pedido?')">Eliminar</a>
+                    <a class="btn btn-success" href="imprimir.php?pedido_id=<?php echo $r['pedido_id'];?>" target="_blank">Imprimir</a>
                 </td>
             </tr>
-            <?php } ?>
+            <?php
+            }
+            ?>
         </tbody>
     </table>
 </section>
@@ -296,6 +233,16 @@ function openEdit(id, estado) {
     document.getElementById('editModal').style.display = 'block';
 }
 function closeEdit() { document.getElementById('editModal').style.display = 'none'; }
+
+// Mostrar/Ocultar campo "Paga con" según el medio de pago
+document.getElementById('medio_pago').addEventListener('change', function() {
+    var pagoConDiv = document.getElementById('pago_con_div');
+    if (this.value === 'Efectivo') {
+        pagoConDiv.style.display = 'block';
+    } else {
+        pagoConDiv.style.display = 'none';
+    }
+});
 </script>
 
 </body>

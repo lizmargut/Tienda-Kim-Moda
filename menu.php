@@ -26,7 +26,7 @@
         <a href="proveedores.php"><i class="bi bi-truck"></i> Proveedores</a>
         <a href="reportes.php"><i class="bi bi-file-earmark-text"></i> Reportes</a>
         <a href="notificacion.php"><i class="bi bi-bell-fill"></i> Notificaciones</a>
-        
+        <a href="logout.php" class="logout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
     </nav>
 </body>
 </html>
