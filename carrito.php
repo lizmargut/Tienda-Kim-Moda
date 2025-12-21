@@ -59,6 +59,6 @@ function obtenerDatosCarrito($conexion) {
     }
     return ['cart_items' => $cart_items, 'total' => $total];
 }
-
+//
 // Procesar la finalización de la venta (mantener en ventas.php o mover a finalizar_venta.php)
 ?>

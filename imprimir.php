@@ -10,7 +10,7 @@ if (!isset($_GET['pedido_id']) || !is_numeric($_GET['pedido_id'])) {
 
 $pedido_id = (int)$_GET['pedido_id'];
 
-// Obtener información del pedido
+// Obtener información del pedido gt
 $sql_pedido = "
     SELECT ped.pedido_id, ped.pedido_fecha, ped.pedido_estado, ped.pedido_medio_pago,
            c.cli_nombre, c.cli_apellido,
