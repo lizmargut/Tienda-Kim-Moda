@@ -15,7 +15,7 @@ $usuario = "administrador"
           include "encabezado.php";
           include_once "menu.php";
           require "cuerpo.php";
-          
+          include "pie.php";
 
           ?>
         </section>

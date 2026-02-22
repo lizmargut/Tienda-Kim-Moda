@@ -1,16 +1,17 @@
 <?php
 session_start();
-if (!isset($_SESSION['usuario'])) {
+
+if (!isset($_SESSION['emp_id'])) {
     header("Location: login.php");
     exit;
 }
 
 // Datos del usuario logueado
-$usuario = $_SESSION['usuario'];
-$rol = $_SESSION['rol']; // 3 = admin, 4 = vendedor
+$usuario = $_SESSION['emp_nombre'] . " " . $_SESSION['emp_apellido'];
+$rol = $_SESSION['fun_descripcion']; // Ahora es texto, no número
 
-// Si es administrador (rol 3), redirigir directamente
-if ($rol == 3) {
+// Si es Administrador, redirigir
+if ($rol == "Administrador") {
     header("Location: productosAdministrar.php");
     exit;
 }
@@ -28,12 +29,13 @@ if ($rol == 3) {
 <div class="container">
 
     <h1>Bienvenido, <?= $usuario ?></h1>
-    <p class="sub">Panel principal del sistema</p>
+    <p class="sub">Rol: <?= $rol ?></p>
+    <p class="sub">KIM MODA</p>
 
     <div class="cards">
 
         <!-- OPCIONES SOLO PARA VENDEDORES -->
-        <?php if ($rol == 4) { ?>
+        <?php if ($rol == "Vendedor") { ?>
 
             <a class="card" href="ventas.php">
                 <i class="bi bi-cart-check-fill"></i>
@@ -57,7 +59,9 @@ if ($rol == 3) {
 
     </div>
 
-    <a href="logout.php" class="logout"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+    <a href="logout.php" class="logout">
+        <i class="bi bi-box-arrow-right"></i> Cerrar sesión
+    </a>
 
 </div>
 
