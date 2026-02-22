@@ -3,6 +3,19 @@ session_start();
 require_once "conexion.php";
 require_once "carrito.php"; // Incluye el archivo carrito.php
 
+
+
+
+if (!isset($_SESSION['emp_id'])) {
+    header("Location: login.php");
+    exit;
+}
+
+$nombre   = $_SESSION['emp_nombre'];
+$apellido = $_SESSION['emp_apellido'];
+$rol      = $_SESSION['fun_descripcion'];
+
+
 // Obtener datos del carrito
 $carrito = obtenerDatosCarrito($conexion);
 $cart_items = $carrito['cart_items'];
@@ -145,10 +158,15 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
                             <?php $clientes->data_seek(0); while ($c = $clientes->fetch_assoc()) { echo "<option value=\"{$c['cli_id']}\">{$c['cli_nombre']} {$c['cli_apellido']}</option>"; } ?>
                         </select>
 
+                       
+
                         <label>Vendedor</label>
-                        <select name="emp_id" required>
-                            <?php $empleados->data_seek(0); while ($e = $empleados->fetch_assoc()) { echo "<option value=\"{$e['emp_id']}\">{$e['emp_nombre']} {$e['emp_apellido']}</option>"; } ?>
-                        </select>
+
+                        <input type="hidden" name="emp_id" value="<?= $_SESSION['emp_id']; ?>">
+
+                        <input type="text" class="form-control"
+                            value="<?= $_SESSION['emp_nombre'] . ' ' . $_SESSION['emp_apellido']; ?>"
+                            readonly>
 
                         <label>Estado</label>
                         <select name="estado" required>

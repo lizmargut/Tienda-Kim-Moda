@@ -1,10 +1,28 @@
 <?php
-session_start(); // Inicio sesión
+session_start();
+require_once "conexion.php";
 
-if (isset($_SESSION['nombre'])) {
-    $nombre   = $_SESSION['nombre'];
-    $apellido = $_SESSION['apellido'];
-    $rol      = $_SESSION['rol'];
+if (isset($_SESSION['emp_id'])) {
+
+    $id = $_SESSION['emp_id'];
+
+    $sql = "SELECT e.emp_nombre, e.emp_apellido, f.fun_descripcion
+            FROM empleados e
+            INNER JOIN funciones f ON e.fun_id = f.fun_id
+            WHERE e.emp_id = ?";
+
+    $stmt = $conexion->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
+
+    if ($resultado->num_rows > 0) {
+        $fila = $resultado->fetch_assoc();
+        $nombre   = $fila['emp_nombre'];
+        $apellido = $fila['emp_apellido'];
+        $rol      = $fila['fun_descripcion'];
+    }
+
 } else {
     $nombre = "Invitado";
     $apellido = "";
