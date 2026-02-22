@@ -1,9 +1,10 @@
 body {
+    margin: 0;
     background: linear-gradient(to right, #fcf193, #fdcdfa, #f8a2de);
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Botón agregar */
+/* ================= BOTÓN AGREGAR ================= */
 .btnAgregar {
     display: inline-block;
     background: #ffb6d9;
@@ -12,7 +13,7 @@ body {
     text-decoration: none;
     border-radius: 6px;
     font-weight: bold;
-    margin: 10px 0 0 5%;
+    margin: 20px 0 0 5%;
     transition: 0.3s;
 }
 
@@ -20,57 +21,56 @@ body {
     background: #d63a8f;
 }
 
-/* Grid de productos */
+/* ================= GRID RESPONSIVE PERFECTO ================= */
 .contenedor {
     width: 90%;
-    margin: 10px auto;
+    margin: 30px auto;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 25px;
 }
 
-/* Tarjetas */
+/* ================= TARJETAS ================= */
 .card {
     background: #ffffff;
-    padding: 12px;
-    border-radius: 12px;
-    box-shadow: 0 3px 8px rgba(214, 58, 143, 0.2);
-    text-align: center;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(214, 58, 143, 0.2);
     border: 1px solid #ffd3ea;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: 0.3s ease;
 }
 
-/* ⚠️ SOLO para imágenes directas (no las del producto) */
-.card > img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
+.card:hover {
+    transform: translateY(-5px);
 }
 
-/* ==========================
-   CONTENEDOR DE IMAGEN PRODUCTO
-========================== */
+/* ================= IMAGEN PERFECTA ================= */
 .img-producto {
     width: 100%;
-    height: 220px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    border-radius: 14px;
+    aspect-ratio: 4 / 5; /* Mantiene proporción uniforme */
     overflow: hidden;
 }
 
-/* Imagen SIN recorte */
 .img-producto img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Recorta sin deformar */
+    display: block;
 }
 
-/* Texto */
+/* ================= CONTENIDO ================= */
+.card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
 .card h3 {
-    margin: 10px 0 5px;
-    font-size: 20px;
+    margin: 5px 0;
+    font-size: 18px;
     font-weight: bold;
     color: #d63a8f;
 }
@@ -79,22 +79,24 @@ body {
     color: #d63a8f;
     font-size: 18px;
     font-weight: bold;
+    margin: 5px 0;
 }
 
 .stock {
     font-size: 14px;
     color: #555;
+    margin-bottom: 10px;
 }
 
-/* Botón ver más */
+/* ================= BOTÓN ================= */
 .btn {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 15px;
+    margin-top: auto;
+    padding: 10px;
     background: #ffb6d9;
     color: white;
     text-decoration: none;
     border-radius: 6px;
+    text-align: center;
     transition: 0.3s;
 }
 
@@ -102,52 +104,11 @@ body {
     background: #d63a8f;
 }
 
-/* ==========================
-   RESPONSIVE (CORRECTO)
-========================== */
-
-@media (max-width: 900px) {
+/* ================= RESPONSIVE EXTRA ================= */
+@media (max-width: 480px) {
     .contenedor {
-        gap: 20px;
-    }
-
-    .card > img {
-        height: 200px;
+        gap: 15px;
     }
 }
-
-@media (max-width: 700px) {
-    .card {
-        padding: 10px;
-    }
-
-    .card > img {
-        height: 190px;
-    }
-}
-
-@media (max-width: 600px) {
-    .btnAgregar {
-        margin-left: 3%;
-        padding: 8px 15px;
-        font-size: 14px;
-    }
-
-    .card > img {
-        height: 170px;
-    }
-}
-
-@media (max-width: 450px) {
-    .card h3 {
-        font-size: 18px;
-    }
-
-    .btn {
-        padding: 7px 12px;
-        font-size: 14px;
-    }
-}
-
 
 

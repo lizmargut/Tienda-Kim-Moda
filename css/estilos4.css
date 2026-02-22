@@ -1,6 +1,6 @@
 body {
-    background: #ffe6f2;
-    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #fcf193, #fdcdfa, #f8a2de);
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -46,32 +46,58 @@ select:focus {
     box-shadow: 0 0 5px rgba(255, 90, 150, 0.5);
 }
 
-.btnGuardar {
+/* Contenedor centrado */
+.contenedorBotones {
+    display: flex;
+    justify-content: center;  /* centra horizontal */
+    gap: 15px;                /* espacio entre botones */
     margin-top: 20px;
-    padding: 12px;
-    width: 100%;
-    background: #ff66b3;
-    color: white;
+}
+
+/* Clase general para ambos */
+.btn {
+    width: 180px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 8px;
     cursor: pointer;
-    font-size: 17px;
-    font-weight: bold;
-    transition: 0.3s;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Botón Guardar */
+.btnGuardar {
+    background: #ff0080;
+    color: white;
 }
 
 .btnGuardar:hover {
     background: #e60073;
 }
 
-/* 📱 RESPONSIVE */
-@media (max-width: 768px) {
-    .contenedor {
-        width: 90%;
-        padding: 20px;
-    }
-
-    h2 {
-        font-size: 22px;
-    }
+/* Botón Volver */
+.btnVolver {
+    background: #444;
+    color: white;
 }
+
+.btnVolver:hover {
+    background: #222;
+}
+
+
+
+/* Sobrescribir Bootstrap */
+.btn-primary {
+    background: #ff0080 !important;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #e60073 !important;
+}
+
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #ff99cc;
+}
+

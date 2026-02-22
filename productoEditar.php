@@ -145,8 +145,17 @@ if (isset($_POST['guardar'])) {
         </select>
 
         <!-- BOTÓN GUARDAR -->
-        <button type="submit" class="btnGuardar" name="guardar">Guardar Cambios</button>
+        <button type="submit" name="guardar"
+                                    class="btn btn-primary w-50">
+                                Guardar cambioa
+        </button>
+        
 
+        <button type="button"
+                                    onclick="window.location.href='productosAdministrar.php'"
+                                    class="btn btn-secondary w-50">
+                                Volver
+        </button>
     </form>
 
 </div>

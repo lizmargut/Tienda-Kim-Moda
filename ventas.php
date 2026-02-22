@@ -1,7 +1,7 @@
 <?php
+session_start();
 require_once "conexion.php";
 require_once "carrito.php"; // Incluye el archivo carrito.php
-require_once "finalizarVenta.php"; // Incluye el archivo finalizarVenta.php
 
 // Obtener datos del carrito
 $carrito = obtenerDatosCarrito($conexion);
@@ -26,7 +26,9 @@ if (isset($_POST['editar_pedido'])) {
 if (isset($_GET['delete_pedido'])) {
     $pid = (int)$_GET['delete_pedido'];
     // borrar detalle primero por FK
-    if ($conexion->query("DELETE FROM detalledeventas WHERE pedido_id = $pid") && $conexion->query("DELETE FROM pedidos WHERE pedido_id = $pid")) {
+    if ($conexion->query("DELETE FROM detalledeventas WHERE pedido_id = $pid") &&
+        $conexion->query("DELETE FROM devoluciones WHERE pedido_id = $pid") && // Eliminar devoluciones asociadas
+        $conexion->query("DELETE FROM pedidos WHERE pedido_id = $pid")) {
         echo "<script>alert('✔ Pedido eliminado'); window.location='ventas.php';</script>";
     } else {
         echo "<script>alert('❌ Error al eliminar pedido');</script>";
@@ -36,12 +38,17 @@ if (isset($_GET['delete_pedido'])) {
 // ---------------------- consultas principales ----------------------
 // productos para mostrar (limitar a 50)
 $search = isset($_GET['q']) ? $conexion->real_escape_string($_GET['q']) : '';
-$sql = "SELECT p.prod_id, p.prod_nombre, p.prod_precio, p.prod_stock, i.img_url, c.cat_nombre
+$sql = "SELECT p.prod_id, p.prod_nombre, p.prod_precio, p.prod_stock,
+               (SELECT img_ruta 
+                FROM imagenes 
+                WHERE prod_id = p.prod_id 
+                LIMIT 1) AS img_ruta,
+               c.cat_nombre
         FROM productos p
-        LEFT JOIN imagenes i ON p.img_id = i.img_id
         LEFT JOIN categorias c ON p.cat_id = c.cat_id
         WHERE p.prod_nombre LIKE '%$search%'
         LIMIT 50";
+
 $res = $conexion->query($sql);
 
 // listar pedidos (últimos 50)
@@ -90,7 +97,7 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
         <div class="productos-grid">
             <?php while ($p = $res->fetch_assoc()) { ?>
                 <div class="card-prod">
-                    <div class="img-wrap"><img src="img/<?php echo htmlspecialchars($p['img_url'] ?? 'noimg.png'); ?>" alt=""></div>
+                    <div class="img-wrap"><img src="img/<?php echo htmlspecialchars($p['img_ruta'] ?? 'noimg.png'); ?>" alt=""></div>
                     <div class="info">
                         <h3><?php echo htmlspecialchars($p['prod_nombre']); ?></h3>
                         <div class="muted"><?php echo htmlspecialchars($p['cat_nombre'] ?? '-'); ?></div>
@@ -196,6 +203,7 @@ $empleados = $conexion->query("SELECT emp_id, emp_nombre, emp_apellido FROM empl
                 <td>
                     <button class="btn btn-outline" onclick="openEdit(<?php echo $r['pedido_id'];?>,'<?php echo $r['pedido_estado'];?>')">Editar</button>
                     <a class="btn btn-danger" href="ventas.php?delete_pedido=<?php echo $r['pedido_id'];?>" onclick="return confirm('Eliminar pedido?')">Eliminar</a>
+                    <a class="btn btn-success" href="devoluciones.php?pedido_id=<?php echo $r['pedido_id'];?>" target="_blank">Devolucion</a>
                     <a class="btn btn-success" href="imprimir.php?pedido_id=<?php echo $r['pedido_id'];?>" target="_blank">Imprimir</a>
                 </td>
             </tr>

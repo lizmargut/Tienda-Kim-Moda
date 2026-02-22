@@ -1,6 +1,7 @@
 /* Fondo general */
 body {
-    background: #fff0f7; /* rosado muy claro profesional */
+    
+    background: linear-gradient(to right, #fcf193, #fdcdfa, #f8a2de);
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
@@ -11,7 +12,7 @@ body {
     width: 80%;
     max-width: 900px;
     margin: 40px auto;
-    background: #ffd4eb; /* rosa suave */
+    background: #fdfcfd; /* rosa suave */
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(214, 58, 143, 0.15);
@@ -75,28 +76,28 @@ h2 {
     transition: 0.3s;
 }
 
-/* Botón editar */
-.editar {
-    background: #f2a3d5; /* rosa elegante medio */
-}
-.editar:hover {
-    background: #d63a8f; /* rosa fuerte */
+.btn-warning {
+    background: #f2a3d5 !important;
 }
 
-/* Botón eliminar */
-.eliminar {
-    background: #ff6b8a; /* rosa rojizo moderno */
-}
-.eliminar:hover {
-    background: #d9445c;
+.btn-warning:hover {
+    background: #d63a8f !important;
 }
 
-/* Botón volver */
-.volver {
-    background: #e8b6d9; /* rosa pastel suave */
+.btn-danger {
+    background: #f44141 !important;
 }
-.volver:hover {
-    background: #d39ac4;
+
+.btn-danger:hover {
+    background: #fa0f0f !important;
+}
+
+.btn-secondary {
+    background: #58f26a !important;
+}
+
+.btn-secondary:hover {
+    background: #8ffa93 !important;
 }
 
 /* 📱 RESPONSIVE */

@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once "conexion.php";
 require_once "carrito.php"; // Incluye el archivo carrito.php
 
@@ -18,7 +20,7 @@ if (isset($_POST['finalizar'])) {
         echo "<script>alert('El carrito está vacío.'); window.location='ventas.php';</script>";
         exit;
     }
-    //
+
     // Validar pago en efectivo
     if ($medio_pago === 'Efectivo') {
         $pago_con = round((float)$_POST['pago_con'], 2); // Redondea el pago_con a 2 decimales
