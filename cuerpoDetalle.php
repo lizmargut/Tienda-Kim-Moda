@@ -26,11 +26,14 @@ $producto = $resProd->fetch_assoc();
 /* ===============================
    TRAER IMÁGENES (MÁX 3)
 ================================ */
-$sqlImg = "SELECT img_ruta
+// $sqlImg = "SELECT img_ruta
+//            FROM imagenes
+//            WHERE prod_id = $id
+//            LIMIT 3";
+$sqlImg = "SELECT img_id, img_ruta
            FROM imagenes
            WHERE prod_id = $id
            LIMIT 3";
-
 $resImg = $conexion->query($sqlImg);
 ?>
 <!DOCTYPE html>
@@ -60,14 +63,22 @@ $resImg = $conexion->query($sqlImg);
         <?php
         if ($resImg->num_rows > 0) {
             $active = "active";
-            while ($img = $resImg->fetch_assoc()) {
-        ?>
-                <div class="carousel-item <?= $active ?>">
-                    <img src="img/<?= $img['img_ruta'] ?>" class="d-block w-100" alt="Imagen producto">
-                </div>
-        <?php
-                $active = "";
-            }
+        while ($img = $resImg->fetch_assoc()) {
+?>
+    <div class="carousel-item <?= $active ?>">
+        <img src="img/<?= $img['img_ruta'] ?>" class="d-block w-100" alt="Imagen producto">
+
+        <div class="text-center mt-2">
+            <a class="btn btn-sm btn-danger"
+               onclick="return confirm('¿Eliminar esta imagen?')"
+               href="imagenEliminar.php?id=<?= $img['img_id'] ?>&prod=<?= $producto['prod_id'] ?>">
+               Eliminar imagen
+            </a>
+        </div>
+    </div>
+<?php
+    $active = "";
+}
         } else {
         ?>
             <div class="carousel-item active">
@@ -108,10 +119,20 @@ $resImg = $conexion->query($sqlImg);
     <a class="btn btn-warning" href="productoEditar.php?id=<?= $producto['prod_id'] ?>">Modificar</a>
     <a class="btn btn-danger"
        onclick="return confirm('¿Seguro que deseas eliminar este producto?')"
-       href="productoEliminar.php?id=<?= $producto['prod_id'] ?>">
-       Eliminar
-    </a>
+       href="productoEliminar.php?id=<?= $producto['prod_id'] ?>">Eliminar</a>
     <a class="btn btn-secondary" href="productosAdministrar.php">Volver</a>
+    
+</div>
+<div class="carousel-item <?= $active ?>">
+    <img src="img/<?= $img['img_ruta'] ?>" class="d-block w-100">
+
+    <div class="text-center mt-2">
+        <a class="btn btn-sm btn-danger"
+           onclick="return confirm('¿Eliminar esta imagen?')"
+           href="imagenEliminar.php?id=<?= $img['img_id'] ?>&prod=<?= $producto['prod_id'] ?>">
+           Eliminar imagen
+        </a>
+    </div>
 </div>
 
 </div>

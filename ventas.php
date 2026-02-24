@@ -27,12 +27,86 @@ $pago_con = 0;
 
 // ---------------------- CRUD PEDIDOS (editar estado / eliminar) ----------------------
 if (isset($_POST['editar_pedido'])) {
+
     $pid = (int)$_POST['pedido_id'];
-    $estado = $conexion->real_escape_string($_POST['pedido_estado']);
-    if ($conexion->query("UPDATE pedidos SET pedido_estado = '$estado' WHERE pedido_id = $pid")) {
-        echo "<script>alert('✔ Estado actualizado'); window.location='ventas.php';</script>";
-    } else {
-        echo "<script>alert('❌ Error al actualizar');</script>";
+    $nuevo_estado = $conexion->real_escape_string($_POST['pedido_estado']);
+
+    $conexion->begin_transaction();
+
+    try {
+
+        // 1️⃣ Obtener estado actual del pedido
+        $res = $conexion->query("SELECT pedido_estado FROM pedidos WHERE pedido_id = $pid");
+        if (!$res || $res->num_rows == 0) {
+            throw new Exception("Pedido no encontrado.");
+        }
+
+        $estado_actual = $res->fetch_assoc()['pedido_estado'];
+
+        // 2️⃣ Si cambia a ANULADO y antes no estaba anulado → devolver stock
+        if ($nuevo_estado === 'Anulado' && $estado_actual !== 'Anulado') {
+
+            $detalle = $conexion->query("
+                SELECT prod_id, cantidad 
+                FROM detalledeventas 
+                WHERE pedido_id = $pid
+            ");
+
+            while ($row = $detalle->fetch_assoc()) {
+
+                $prod_id = $row['prod_id'];
+                $cantidad = $row['cantidad'];
+
+                $conexion->query("
+                    UPDATE productos 
+                    SET prod_stock = prod_stock + $cantidad 
+                    WHERE prod_id = $prod_id
+                ");
+            }
+        }
+
+        // 3️⃣ Si estaba anulado y ahora vuelve a estado normal → descontar stock otra vez
+        if ($estado_actual === 'Anulado' && $nuevo_estado !== 'Anulado') {
+
+            $detalle = $conexion->query("
+                SELECT prod_id, cantidad 
+                FROM detalledeventas 
+                WHERE pedido_id = $pid
+            ");
+
+            while ($row = $detalle->fetch_assoc()) {
+
+                $prod_id = $row['prod_id'];
+                $cantidad = $row['cantidad'];
+
+                // verificar stock antes de descontar
+                $stockRes = $conexion->query("SELECT prod_stock FROM productos WHERE prod_id = $prod_id");
+                $stock = $stockRes->fetch_assoc()['prod_stock'];
+
+                if ($stock < $cantidad) {
+                    throw new Exception("Stock insuficiente para el producto ID $prod_id.");
+                }
+
+                $conexion->query("
+                    UPDATE productos 
+                    SET prod_stock = prod_stock - $cantidad 
+                    WHERE prod_id = $prod_id
+                ");
+            }
+        }
+
+        // 4️⃣ Actualizar estado
+        $conexion->query("UPDATE pedidos SET pedido_estado = '$nuevo_estado' WHERE pedido_id = $pid");
+
+        $conexion->commit();
+
+        echo "<script>alert('✔ Estado actualizado correctamente'); window.location='ventas.php';</script>";
+
+    } catch (Exception $e) {
+
+        $conexion->rollback();
+        $msg = addslashes($e->getMessage());
+        echo "<script>alert('❌ Error: $msg'); window.location='ventas.php';</script>";
     }
 }
 
