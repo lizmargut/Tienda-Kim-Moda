@@ -39,13 +39,13 @@ $devoluciones = mysqli_query($conexion, "
 ");
 
 // 5. Últimos ingresos de proveedores
-$ingresos = mysqli_query($conexion, "
-    SELECT i.ing_fecha, i.ing_precio, pr.prov_nombre, pr.prov_apellido
-    FROM ingresos i
-    INNER JOIN proveedores pr ON i.prov_id = pr.prov_id
-    ORDER BY i.ing_fecha DESC
-    LIMIT 5
-");
+// $ingresos = mysqli_query($conexion, "
+//     SELECT i.ing_fecha, i.ing_precio, pr.prov_nombre, pr.prov_apellido
+//     FROM ingresos i
+//     INNER JOIN proveedores pr ON i.prov_id = pr.prov_id
+//     ORDER BY i.ing_fecha DESC
+//     LIMIT 5
+// ");
 ?>
 
 <!DOCTYPE html>
@@ -121,16 +121,7 @@ $ingresos = mysqli_query($conexion, "
     </div>
 
     <!-- Ingresos de Proveedores -->
-    <div class="caja">
-        <h3>💼 Últimos Ingresos</h3>
-        <?php while ($i = mysqli_fetch_assoc($ingresos)): ?>
-            <div class="item">
-                Proveedor: <?= $i['prov_nombre'] . " " . $i['prov_apellido'] ?><br>
-                Precio: $<?= $i['ing_precio'] ?><br>
-                Fecha: <?= $i['ing_fecha'] ?>
-            </div>
-        <?php endwhile; ?>
-    </div>
+    
 
 </div>
 

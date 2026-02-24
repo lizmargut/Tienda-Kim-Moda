@@ -147,7 +147,7 @@ if (isset($_POST['guardar'])) {
         <!-- BOTÓN GUARDAR -->
         <button type="submit" name="guardar"
                                     class="btn btn-primary w-50">
-                                Guardar cambioa
+                                Guardar cambios
         </button>
         
 

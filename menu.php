@@ -87,6 +87,16 @@ $rol = "administrador"; // Simulación de rol
                     </a>
                 </li>
 
+                <!-- <li class= "nav-item"> 
+                    <a class="nav-link" href="ingreso.php">
+                        <i class="bi bi-box-arrow-in-down"></i> Ingreso de productos
+                    </a>
+                </li> -->
+
+    
+
+
+
             </ul>
 
             <!-- Botón cerrar sesión a la derecha -->

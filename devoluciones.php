@@ -135,7 +135,8 @@ if (!$result_productos) {
             <textarea name="motivo_devolucion" id="motivo_devolucion" rows="4" required></textarea>
 
             <button type="submit" name="procesar_devolucion" class="btn-procesar">Procesar Devolución</button>
-            <button type="button" onclick="ventas.php" class="btn-volver">Volver</button>
+            <button type="button" onclick="window.location.href='ventas.php'" class="btn-volver">Volver</button>
+
 
         </form>
     </div>

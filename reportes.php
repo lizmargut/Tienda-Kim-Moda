@@ -43,14 +43,14 @@ $devolucionesQuery = mysqli_query($conexion, "
 ");
 
 // 5. INGRESOS POR PROVEEDOR
-$ingresosQuery = mysqli_query($conexion, "
-    SELECT pr.prov_nombre, pr.prov_apellido, 
-           SUM(i.ing_precio) AS total_gastado
-    FROM ingresos i
-    INNER JOIN proveedores pr ON i.prov_id = pr.prov_id
-    GROUP BY pr.prov_id
-    ORDER BY total_gastado DESC
-");
+// $ingresosQuery = mysqli_query($conexion, "
+//     SELECT pr.prov_nombre, pr.prov_apellido, 
+//            SUM(i.ing_precio) AS total_gastado
+//     FROM ingresos i
+//     INNER JOIN proveedores pr ON i.prov_id = pr.prov_id
+//     GROUP BY pr.prov_id
+//     ORDER BY total_gastado DESC
+// ");
 ?>
 
 <!DOCTYPE html>
@@ -150,7 +150,7 @@ $ingresosQuery = mysqli_query($conexion, "
 <!-- ===========================
         GASTOS POR PROVEEDOR
 =========================== -->
-<h3 class="subtitulo">📌 Ingresos (Gastos) por Proveedor</h3>
+<!-- <h3 class="subtitulo">📌 Ingresos (Gastos) por Proveedor</h3>
 <table>
     <tr>
         <th>Proveedor</th>
@@ -163,7 +163,7 @@ $ingresosQuery = mysqli_query($conexion, "
         <td>$<?= number_format($row['total_gastado'], 2) ?></td>
     </tr>
     <?php endwhile; ?>
-</table>
+</table> -->
 
 </body>
 </html>
