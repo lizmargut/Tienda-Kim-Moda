@@ -50,17 +50,32 @@ if (isset($_POST['finalizar'])) {
         if (!$conexion->query($sql)) throw new Exception($conexion->error);
         $pedido_id = $conexion->insert_id;
 
-        foreach ($cart as $pid => $qty) {
-            $info = $prodInfo[$pid] ?? null;
-            if (!$info) throw new Exception("Producto ID $pid no encontrado.");
-            if ($info['prod_stock'] < $qty) throw new Exception("Stock insuficiente para {$info['prod_id']}.");
+       foreach ($cart as $pid => $qty) {
 
-            $ins = "INSERT INTO detalledeventas (pedido_id, prod_id, cantidad) VALUES ($pedido_id, $pid, $qty)";
-            if (!$conexion->query($ins)) throw new Exception($conexion->error);
+    $info = $prodInfo[$pid] ?? null;
+    if (!$info) 
+        throw new Exception("Producto ID $pid no encontrado.");
 
-            $newStock = $info['prod_stock'] - $qty;
-            if (!$conexion->query("UPDATE productos SET prod_stock = $newStock WHERE prod_id = $pid")) throw new Exception($conexion->error);
-        }
+    // Insertar detalle
+    $ins = "INSERT INTO detalledeventas (pedido_id, prod_id, cantidad) 
+            VALUES ($pedido_id, $pid, $qty)";
+    if (!$conexion->query($ins)) 
+        throw new Exception($conexion->error);
+
+    // Descontar stock SOLO si NO está anulado
+    if ($estado !== 'Anulado') {
+
+        if ($info['prod_stock'] < $qty)
+            throw new Exception("Stock insuficiente para {$info['prod_id']}.");
+
+        $newStock = $info['prod_stock'] - $qty;
+
+        if (!$conexion->query("UPDATE productos 
+                               SET prod_stock = $newStock 
+                               WHERE prod_id = $pid"))
+            throw new Exception($conexion->error);
+    }
+}
 
         $conexion->commit();
         unset($_SESSION['cart']);
